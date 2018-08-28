@@ -62,6 +62,15 @@ class Bundix
     {groups: dep_cache.fetch(spec.name).groups}
   end
 
+  def src(spec)
+    case spec.source
+    when Bundler::Source::Path
+      {src: spec.source.path.realpath}
+    else
+      {}
+    end
+  end
+
   PLATFORM_MAPPING = {}
 
   {
@@ -96,7 +105,7 @@ class Bundix
       spec.name => {
         version: spec.version.to_s,
         source: Source.new(spec, fetcher).convert
-      }.merge(platforms(spec, dep_cache)).merge(groups(spec, dep_cache))
+      }.merge(platforms(spec, dep_cache)).merge(groups(spec, dep_cache)).merge(src(spec))
     }
   rescue => ex
     warn "Skipping #{spec.name}: #{ex}"

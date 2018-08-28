@@ -87,6 +87,8 @@ class Bundix
         convert_rubygems
       when Bundler::Source::Git
         convert_git
+      when Bundler::Source::Path
+        convert_path
       else
         pp spec
         fail 'unkown bundler source'
@@ -119,6 +121,11 @@ class Bundix
         rev: revision,
         sha256: hash,
         fetchSubmodules: false }
+    end
+
+    def convert_path
+      { type: 'gem'
+      }
     end
   end
 end
